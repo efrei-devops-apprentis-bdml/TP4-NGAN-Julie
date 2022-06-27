@@ -16,3 +16,14 @@ data "azurerm_subnet" "tp4"{ # fait référence en écriture au subnet
     resource_group_name = "devops-TP2"
     virtual_network_name = "example-network"
 }
+
+data "template_cloudinit_config" "config" {
+  gzip          = true
+  base64_encode = true
+
+  # Main cloud-config configuration file.
+  part {
+    content_type = "text/cloud-config"
+    content      = "packages: ['httpie']"
+  }
+}

@@ -62,6 +62,10 @@ resource "azurerm_linux_virtual_machine" "devops-20180476" {
   network_interface_ids = [azurerm_network_interface.NetworkInterface_20180476.id]
   size                  = "Standard_D2s_v3"
 
+  # This is where we pass our cloud-init.
+  custom_data = data.template_cloudinit_config.config.rendered
+
+
   os_disk {
     name                 = "mynewOsDisk"
     caching              = "ReadWrite"
