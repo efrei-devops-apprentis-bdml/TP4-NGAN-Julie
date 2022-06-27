@@ -5,7 +5,6 @@ resource "azurerm_public_ip" "PlublicIP_20180776" {
   allocation_method   = "Dynamic"
 }
 
-# Create Network Security Group and rule
 resource "azurerm_network_security_group" "NSG_20180476" {
   name                = "NetworkSecurityGroup_20180476"
   location            = var.region
@@ -24,7 +23,6 @@ resource "azurerm_network_security_group" "NSG_20180476" {
   }
 }
 
-# Create network interface
 resource "azurerm_network_interface" "NetworkInterface_20180476" {
   name                = "NIC_20180476"
   location            = var.region
@@ -38,16 +36,13 @@ resource "azurerm_network_interface" "NetworkInterface_20180476" {
   }
 }
 
-# Connect the security group to the network interface
 resource "azurerm_network_interface_security_group_association" "NetWorkInterfaceSecurityGroupAssociation_20180476" {
   network_interface_id      = azurerm_network_interface.NetworkInterface_20180476.id
   network_security_group_id = azurerm_network_security_group.NSG_20180476.id
 }
 
-# Generate random text for a unique storage account name
 resource "random_id" "randomId" {
   keepers = {
-    # Generate a new ID only when a new resource group is defined
     resource_group = data.azurerm_resource_group.tp4.name
   }
 
@@ -55,14 +50,11 @@ resource "random_id" "randomId" {
 }
 
 
-
-# Create (and display) an SSH key
 resource "tls_private_key" "ssh_20180476" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
-# Create virtual machine
 resource "azurerm_linux_virtual_machine" "devops-20180476" {
   name                  = "devops-20180476"
   location              = data.azurerm_resource_group.tp4.location
