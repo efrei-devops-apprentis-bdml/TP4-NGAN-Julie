@@ -1,13 +1,13 @@
-resource "azurerm_public_ip" "mynewterraformpublicip" {
-  name                = "mynewPublicIP"
+resource "azurerm_public_ip" "PlublicIP_20180776" {
+  name                = "PublicIP_20180476"
   location            = var.region
   resource_group_name = "devops-TP2"
   allocation_method   = "Dynamic"
 }
 
 # Create Network Security Group and rule
-resource "azurerm_network_security_group" "mynewterraformnsg" {
-  name                = "mynewNetworkSecurityGroup"
+resource "azurerm_network_security_group" "NSG_20180476" {
+  name                = "NetworkSecurityGroup_20180476"
   location            = var.region
   resource_group_name = "devops-TP2"
 
@@ -25,23 +25,23 @@ resource "azurerm_network_security_group" "mynewterraformnsg" {
 }
 
 # Create network interface
-resource "azurerm_network_interface" "mynewterraformnic" {
-  name                = "mynewNIC"
+resource "azurerm_network_interface" "NetworkInterface_20180476" {
+  name                = "NIC_20180476"
   location            = var.region
   resource_group_name = data.azurerm_resource_group.tp4.name
 
   ip_configuration {
-    name                          = "mynewNicConfiguration"
+    name                          = "NicConfiguration_20180476"
     subnet_id                     = data.azurerm_subnet.tp4.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.mynewterraformpublicip.id
+    public_ip_address_id          = azurerm_public_ip.PlublicIP_20180776.id
   }
 }
 
 # Connect the security group to the network interface
-resource "azurerm_network_interface_security_group_association" "example" {
-  network_interface_id      = azurerm_network_interface.mynewterraformnic.id
-  network_security_group_id = azurerm_network_security_group.mynewterraformnsg.id
+resource "azurerm_network_interface_security_group_association" "NetWorkInterfaceSecurityGroupAssociation_20180476" {
+  network_interface_id      = azurerm_network_interface.NetworkInterface_20180476.id
+  network_security_group_id = azurerm_network_security_group.NSG_20180476.id
 }
 
 # Generate random text for a unique storage account name
@@ -57,17 +57,17 @@ resource "random_id" "randomId" {
 
 
 # Create (and display) an SSH key
-resource "tls_private_key" "example_ssh" {
+resource "tls_private_key" "ssh_20180476" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 # Create virtual machine
-resource "azurerm_linux_virtual_machine" "mynewterraformvm" {
-  name                  = "mynewVM"
+resource "azurerm_linux_virtual_machine" "devops-20180476" {
+  name                  = "devops-20180476"
   location              = data.azurerm_resource_group.tp4.location
   resource_group_name   = data.azurerm_resource_group.tp4.name
-  network_interface_ids = [azurerm_network_interface.mynewterraformnic.id]
+  network_interface_ids = [azurerm_network_interface.NetworkInterface_20180476.id]
   size                  = "Standard_D2s_v3"
 
   os_disk {
@@ -89,7 +89,7 @@ resource "azurerm_linux_virtual_machine" "mynewterraformvm" {
 
   admin_ssh_key {
     username   = "devops"
-    public_key = tls_private_key.example_ssh.public_key_openssh
+    public_key = tls_private_key.ssh_20180476.public_key_openssh
   }
 
 }
